@@ -1,22 +1,24 @@
 import React, { Component } from 'react';
+import Listitems from './Listitems';
 
 class Todolist extends Component {
     render() {
-        console.log(this.props.items);
+        let filter = this.props.filter;
         return (
             <ul>
-                {this.props.items.map((item,index) => (
-                    <li key = {item.id}>
-                        <div className="list-title">
-                            <input type="checkbox" id={index} onChange= {this.props.onChange}/>
-                            {!item.update?<label htmlFor={index} style={item.completed?{textDecoration:'line-through'}:{textDecoration:'none'}}>{item.text}</label>:<input type="text" value={item.text} id={index} onChange={this.props.onUpdate}/>}
-                        </div>
-                        <div>
-                            <span id={index} onClick = {this.props.onItemDelete}>&#10006;</span>
-                            <span id={index} onClick={this.props.onUpdateClick}>{!item.update?"Update":"Save"}</span>
-                        </div>
-                    </li>
-                ))}
+                {this.props.items.map((item, index) => {
+                    if (filter === 'all') {
+                        return (<Listitems key={item.id} item={item} index={index} onChange={this.props.onChange} onItemDelete={this.props.onItemDelete} onUpdateClick={this.props.onUpdateClick} onUpdate={this.props.onUpdate}/>)
+                    } else if (filter === 'active') {
+                        if (!item.completed) {
+                            return (<Listitems key={item.id} item={item} index={index} onChange={this.props.onChange} onItemDelete={this.props.onItemDelete} onUpdateClick={this.props.onUpdateClick} onUpdate={this.props.onUpdate}/>)
+                        }
+                    } else {
+                        if (item.completed) {
+                            return (<Listitems key={item.id} item={item} index={index} onChange={this.props.onChange} onItemDelete={this.props.onItemDelete} onUpdateClick={this.props.onUpdateClick} onUpdate={this.props.onUpdate}/>)
+                        }
+                    }
+                })}
             </ul>
         );
     }

@@ -7,7 +7,8 @@ class Todomain extends Component {
         super(props);
         this.state = {
             text: '',
-            items: []
+            items: [],
+            filter:"all"
         }
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -15,6 +16,7 @@ class Todomain extends Component {
         this.onItemDelete = this.onItemDelete.bind(this);
         this.onItemUpdate = this.onItemUpdate.bind(this);
         this.onUpdateClick = this.onUpdateClick.bind(this);
+        this.onFooterClick = this.onFooterClick.bind(this);
     }
     handleInputChange(e) {
         let value = e.target.value;
@@ -22,7 +24,7 @@ class Todomain extends Component {
     }
     handleSubmit(e) {
         e.preventDefault();
-        if(!this.state.text.length) {
+        if(!this.state.text.trim().length) {
             return
         }
         const strArray = this.state.text.split(",");
@@ -68,6 +70,10 @@ class Todomain extends Component {
             items: prevState.items.map((item,index)=>index===id?{...item,update:!item.update}:item)
         }))
     }
+    onFooterClick(e) {
+        let type = e.target.dataset.type;
+        this.setState({filter:type})
+    }
     render() {
         return (
             <div>
@@ -75,8 +81,8 @@ class Todomain extends Component {
                     <input type="text" onChange={this.handleInputChange} value={this.state.text} placeholder="Enter a todo.."/>
                     <button>ADD</button>
                 </form>
-                <Todolist items={this.state.items} onChange = {this.handleChange} onItemDelete = {this.onItemDelete} onUpdate = {this.onItemUpdate} onUpdateClick = {this.onUpdateClick}/>
-                <Todofooter items={this.state.items}/>
+                <Todolist items={this.state.items} filter = {this.state.filter} onChange = {this.handleChange} onItemDelete = {this.onItemDelete} onUpdate = {this.onItemUpdate} onUpdateClick = {this.onUpdateClick}/>
+                <Todofooter items={this.state.items} filter = {this.state.filter} onClick = {this.onFooterClick}/>
             </div>
         );
     }
