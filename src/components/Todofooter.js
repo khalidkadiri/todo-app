@@ -1,15 +1,18 @@
-import React from 'react';
-import Footerbutton from './Footerbutton';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { setFilter } from '../actions';
+import Footerbutton from './FooterButton';
 
-const Todofooter = (props) => {
-    return (
-        <div>
-            <div>
-                <Footerbutton onClick={props.onClick} data="all" disabled={props.filter === 'all'}>All</Footerbutton>
-                <Footerbutton onClick={props.onClick} data="active" disabled={props.filter === 'active'}>Not Done</Footerbutton>
-                <Footerbutton onClick={props.onClick} data="completed" disabled={props.filter === 'completed'}>Done</Footerbutton>
-            </div>
-        </div>
-    );
-};
-export default Todofooter;
+const mapStateToProps = (state, ownProps) => {
+    console.log(ownProps);
+    return {
+        disabled: ownProps.filter === state.filter
+    }
+}
+
+const mapDispatchToProps = (dispatch,ownProps) => {
+    return {
+        onClick:()=> dispatch(setFilter(ownProps.filter))
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(Footerbutton);

@@ -66,4 +66,5 @@ ul li:hover {
 
 button[disabled] {
   background-color: gray;
+  cursor: default;
 }

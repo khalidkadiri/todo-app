@@ -1,18 +1,19 @@
 import React from 'react';
 
-const Listitems = ({item, index, onChange, onItemDelete, onUpdateClick, onUpdate}) => {
+const ListItems = ({ onItemDelete, onChange, index, item, onUpdate, onUpdateClick }) => {
+    console.log(onItemDelete);
     return (
-        <li>
+        <li key={index}>
             <div className="list-title">
-                <input type="checkbox" id={index} onChange={onChange} checked={item.completed}/>
-                {!item.update ? <label htmlFor={index} style={item.completed ? { textDecoration: 'line-through' } : { textDecoration: 'none' }}>{item.text}</label> : <input type="text" value={item.text} id={index} onChange={onUpdate} />}
+                <input type="checkbox" id={index} onChange={(e) => onChange(e)} checked={item.completed} />
+                {!item.update ? <label htmlFor={index} style={item.completed ? { textDecoration: 'line-through' } : { textDecoration: 'none' }}>{item.text}</label> : <input type="text" value={item.text} id={index} onChange={(e) => onUpdate(e)} />}
             </div>
             <div>
-                <span id={index} onClick={onItemDelete}>&#10006;</span>
-                <span id={index} onClick={onUpdateClick}>{!item.update ? "Update" : "Save"}</span>
+                <span id={index} onClick={(e) => onItemDelete(e)}>&#10006;</span>
+                <span id={index} onClick={(e) => onUpdateClick(e)}>{!item.update ? "Update" : "Save"}</span>
             </div>
         </li>
     );
 };
 
-export default Listitems;
+export default ListItems;
