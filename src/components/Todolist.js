@@ -1,19 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { toggleTodo, deleteTodo,updateTodo,updateTodoText} from '../actions'
+import { toggleTodo, deleteTodo, updateTodo, updateTodoText } from '../actions'
 import { bindActionCreators } from 'redux';
-import ListItems from './ListItems';
+import { getVisibleItems } from '../reducers/'
 
 class Todolist extends Component {
-    constructor(props) {
-        super(props);
-        this.onChange = this.onChange.bind(this);
-        this.onItemDelete = this.onItemDelete.bind(this);
-        this.onUpdateClick = this.onUpdateClick.bind(this);
-        this.onUpdate = this.onUpdate.bind(this);
-
-    }
     onChange(e) {
+        console.log("called");
         let id = parseInt(e.target.id);
         this.props.toggleTodo(id);
     }
@@ -28,23 +21,22 @@ class Todolist extends Component {
     onUpdate(e) {
         let id = parseInt(e.target.id);
         let text = e.target.value;
-        this.props.updateTodoText(id,text);
+        this.props.updateTodoText(id, text);
     }
     render() {
-        let filterType = this.props.filter;
-        let renderList = this.props.items.map((item, index) => {
-            if(filterType === 'all') {
-               return <ListItems onChange={this.onChange} onItemDelete={this.onItemDelete} onUpdateClick={this.onUpdateClick} onUpdate={this.onUpdate} index= {index} item = {item}/>
-            } else if(filterType === 'active') {
-                if(!item.completed) {
-                    return <ListItems onChange={this.onChange} onItemDelete={this.onItemDelete} onUpdateClick={this.onUpdateClick} onUpdate={this.onUpdate} index= {index} item = {item}/>
-                }
-            } else {
-                if(item.completed) {
-                    return <ListItems onChange={this.onChange} onItemDelete={this.onItemDelete} onUpdateClick={this.onUpdateClick} onUpdate={this.onUpdate} index= {index} item = {item}/>
-                }
-            }
-        });
+        console.log("rendered",this.props.items);
+        let renderList = this.props.items.map((item,index) => (
+            <li key={index}>
+                <div className="list-title">
+                    <input type="checkbox" id={item.id} onChange={(e) => this.onChange(e)} checked={item.completed} />
+                    {!item.update ? <label htmlFor={item.id} style={item.completed ? { textDecoration: 'line-through' } : { textDecoration: 'none' }}>{item.text}</label> : <input type="text" value={item.text} id={item.id} onChange={(e) => this.onUpdate(e)} />}
+                </div>
+                <div>
+                    <span id={item.id} onClick={(e) => this.onItemDelete(e)}>&#10006;</span>
+                    <span id={item.id} onClick={(e) => this.onUpdateClick(e)}>{!item.update ? "Update" : "Save"}</span>
+                </div>
+            </li>
+        ));
         return (
             <ul>
                 {renderList}
@@ -52,14 +44,13 @@ class Todolist extends Component {
         );
     }
 }
-const mapStateToProps = (state,ownprops) => {
+const mapStateToProps = (state) => {
     return {
-        items: state.items,
-        filter: state.filter
+        items: getVisibleItems(state, state.filter)
     }
 }
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({ toggleTodo,deleteTodo,updateTodo,updateTodoText}, dispatch)
+    return bindActionCreators({ toggleTodo, deleteTodo, updateTodo, updateTodoText }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Todolist);

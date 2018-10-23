@@ -1,4 +1,4 @@
-import addReducer from './add_reducer';
+import addReducer, * as fromAddReducer from './add_reducer';
 import filterReducer from './filter_reducer';
 import { combineReducers } from 'redux'
 
@@ -8,3 +8,5 @@ const reducer = combineReducers({
 })
 
 export default reducer;
+
+export const getVisibleItems = (state,filter) => fromAddReducer.getVisibleItems(state.items,filter)
